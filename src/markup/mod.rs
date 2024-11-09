@@ -65,7 +65,7 @@ mod tests {
         OptionLike, ParseOptions, PluginIdentifier,
     };
     use crate::util::{CollectorAppender, IntoString};
-    use saphyr::{Hash, Yaml, YamlLoader};
+    use saphyr::{Hash, Yaml};
     use std::fs::File;
     use std::io::Read;
     use std::rc::Rc;
@@ -233,7 +233,7 @@ mod tests {
             .unwrap()
             .read_to_string(&mut contents)
             .unwrap();
-        let yaml_data = YamlLoader::load_from_str(&contents).unwrap();
+        let yaml_data = Yaml::load_from_str(&contents).unwrap();
         let data = yaml_data[0].as_hash().unwrap()[&Yaml::from_str("test_vectors")]
             .as_hash()
             .unwrap();
@@ -243,7 +243,7 @@ mod tests {
             let params = v.as_hash().unwrap();
             let (context, options) = get_context_options(params);
             let parsed_source = match &params[&Yaml::from_str("source")] {
-                Yaml::String(s) => vec![parse(s, &context, &options)],
+                Yaml::String(s) => vec![parse(&s, &context, &options)],
                 Yaml::Array(a) => {
                     parse_paragraphs(a.iter().map(|s| s.as_str().unwrap()), &context, &options)
                 }
